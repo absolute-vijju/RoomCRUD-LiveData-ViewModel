@@ -29,7 +29,7 @@ class UsersFragment : BaseFragment(), View.OnClickListener {
     private val roomViewModel: RoomViewModel by viewModels()
     private lateinit var mBinding: FragmentUsersBinding
     private var userList = listOf<UserEntity>()
-    private val dialogRoomBinding: DialogRoomBinding? = null
+    private var dialogRoomBinding: DialogRoomBinding? = null
 
     private val usersAdapter by lazy {
         UsersAdapter { position, itemId ->
@@ -90,35 +90,37 @@ class UsersFragment : BaseFragment(), View.OnClickListener {
 
     private fun showDialog(userEntity: UserEntity? = null) {
         var isFavourite = false
-        val dialogRoomBinding = DialogRoomBinding.inflate(layoutInflater)
+        dialogRoomBinding = DialogRoomBinding.inflate(layoutInflater)
+        if (dialogRoomBinding == null)
+            return
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setContentView(dialogRoomBinding.root)
+        dialog.setContentView(dialogRoomBinding!!.root)
 
         if (isFavourite)
-            dialogRoomBinding.ivFavourite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_star_selected))
+            dialogRoomBinding!!.ivFavourite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_star_selected))
         else
-            dialogRoomBinding.ivFavourite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_star_unselected))
+            dialogRoomBinding!!.ivFavourite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_star_unselected))
 
-        dialogRoomBinding.ivProfile.setOnClickListener { pickImageContract?.launch("image/*") }
+        dialogRoomBinding!!.ivProfile.setOnClickListener { pickImageContract?.launch("image/*") }
 
-        dialogRoomBinding.ivFavourite.setOnClickListener {
+        dialogRoomBinding!!.ivFavourite.setOnClickListener {
             isFavourite = !isFavourite
             if (isFavourite)
-                dialogRoomBinding.ivFavourite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_star_selected))
+                dialogRoomBinding!!.ivFavourite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_star_selected))
             else
-                dialogRoomBinding.ivFavourite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_star_unselected))
+                dialogRoomBinding!!.ivFavourite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_star_unselected))
         }
 
         userEntity?.let {
             bitmap = it.image
             isFavourite = it.isFavourite
-            dialogRoomBinding.ivProfile.setImageBitmap(it.image)
-            dialogRoomBinding.etFullName.setText(it.name)
-            dialogRoomBinding.etNumber.setText(it.number)
+            dialogRoomBinding!!.ivProfile.setImageBitmap(it.image)
+            dialogRoomBinding!!.etFullName.setText(it.name)
+            dialogRoomBinding!!.etNumber.setText(it.number)
         }
 
-        dialogRoomBinding.btnSubmit.setOnClickListener {
+        dialogRoomBinding!!.btnSubmit.setOnClickListener {
 
             if (bitmap == null) {
                 activity?.showShortToast("Please select your image.")
@@ -130,8 +132,8 @@ class UsersFragment : BaseFragment(), View.OnClickListener {
                 Log.d("mydata", Gson().toJson(userEntity))
                 if (userEntity != null) {
                     userEntity.apply {
-                        name = dialogRoomBinding.etFullName.text.toString()
-                        number = dialogRoomBinding.etNumber.text.toString()
+                        name = dialogRoomBinding!!.etFullName.text.toString()
+                        number = dialogRoomBinding!!.etNumber.text.toString()
                         isFavourite = isFavourite
                         image = bitmap!!
                     }
@@ -139,7 +141,7 @@ class UsersFragment : BaseFragment(), View.OnClickListener {
                     context?.showShortToast("User UPDATED")
                 } else {
                     roomViewModel.insertUser(
-                        UserEntity(dialogRoomBinding.etFullName.text.toString(), dialogRoomBinding.etNumber.text.toString(), isFavourite, bitmap!!)
+                        UserEntity(dialogRoomBinding!!.etFullName.text.toString(), dialogRoomBinding!!.etNumber.text.toString(), isFavourite, bitmap!!)
                     )
                     context?.showShortToast("User ADDED.")
                 }
