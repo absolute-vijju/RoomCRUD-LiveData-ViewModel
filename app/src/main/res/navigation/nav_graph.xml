@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph.xml"
+    app:startDestination="@id/UsersFragment">
+
+    <fragment
+        android:id="@+id/UsersFragment"
+        android:name="com.developer.vijay.room.UsersFragment"
+        tools:layout="@layout/fragment_users" >
+        <action
+            android:id="@+id/action_RoomDashboardFragment_to_FavouriteFragment"
+            app:destination="@id/FavouriteFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/FavouriteFragment"
+        android:name="com.developer.vijay.room.FavouriteFragment"
+        tools:layout="@layout/fragment_favourite" />
+
+</navigation>
